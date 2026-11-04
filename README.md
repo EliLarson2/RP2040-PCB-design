@@ -1,27 +1,17 @@
-# Custom RP2040 Embedded Controller PCB
+# RP2040-PCB-design
+Designed and fabricated a custom PCB featuring the RP2040 microcontroller using KiCad, including full schematic capture, trace routing, and PCB layout. Completed hardware bring-up by soldering passives and programming the board with a minimal Ubuntu-based BIOS to initialize the system and enable coding environment support for temperature sensors and LCD screen.
 
-A custom two-layer embedded controller designed around the **RP2040 microcontroller** using **KiCad**.
+Below is the schematic diagram
+<img width="1102" height="757" alt="image" src=" " />
 
-## Hardware Overview
+Then the first PCB design run without traces
 
-The board integrates:
+<img width="712" height="695" alt="image" src=" " />
 
-- **RP2040 microcontroller**
-- **External QSPI flash** for nonvolatile program storage
-- External crystal and clock circuitry
-- **3.3 V power regulation**
-- USB-C interface
-- I2C interfaces
-- External load-driver circuitry
 
-## Board Bring-Up
 
-The bring-up process included:
 
-1. Visual inspection
-2. Power and ground verification
-3. Validation of the 3.3 V rail
-4. Verification of RP2040 boot behavior
-5. Firmware programming
-6. Peripheral testing
-7. Hardware troubleshooting
+Then fully printed and soldered + BIOS integration
+
+
+<img width="2054" height="1978" alt="image" src="" /> 
