@@ -1,35 +1,16 @@
 # Custom RP2040 Embedded Controller PCB
 
-A custom two-layer embedded controller designed in KiCad around the **bare RP2040 microcontroller** rather than a development-board module.
+A custom two-layer embedded controller designed in KiCad around the **bare RP2040 microcontroller**.
 
-I completed the full hardware-development cycle: schematic capture, component selection, PCB layout and routing, fabrication, hand assembly, firmware programming, and hardware bring-up. The assembled board successfully booted and accepted firmware, and I validated its **I2C interfaces and external load-driver functionality**.
+I built this project to move beyond development boards and learn what it takes to design a microcontroller system from the component level. Instead of using a Raspberry Pi Pico module, I implemented the supporting circuitry for the RP2040 myself, including power, clocking, external flash, USB, programming support, and peripheral interfaces.
 
----
-
-## Project Highlights
-
-- Designed around a **bare RP2040**, implementing the support circuitry normally provided by a development board
-- Integrated external QSPI flash, crystal and clock circuitry, 3.3 V regulation and decoupling, USB-C, I2C, load-driver circuitry, and programming/boot support
-- Took the design from **schematic through fabricated hardware**
-- Hand-assembled and incrementally brought up the completed PCB
-- Successfully validated RP2040 programming and boot behavior
-- Verified I2C communication and external load-driver operation
-- Applied a structured measurement-driven approach to hardware debugging
+I took the board from schematic capture through PCB layout, fabrication, hand assembly, firmware programming, and hardware bring-up. The finished board successfully booted and ran firmware, and I validated its I2C interfaces and external load-driver circuitry.
 
 ---
 
-## Hardware Overview
+## Hardware
 
-The controller integrates:
-
-- RP2040 microcontroller
-- External QSPI flash for nonvolatile program storage
-- External crystal and clock circuitry
-- 3.3 V power regulation and decoupling
-- USB-C interface
-- I2C interfaces for external peripherals
-- External load-driver circuitry
-- Programming and boot-support circuitry
+The board includes an RP2040 microcontroller, external QSPI flash, crystal and clock circuitry, 3.3 V power regulation and decoupling, USB-C, I2C interfaces, external load-driver circuitry, and programming/boot support.
 
 Component selection and circuit implementation were based on manufacturer datasheets, reference designs, and the electrical requirements of the system.
 
@@ -37,101 +18,83 @@ Component selection and circuit implementation were based on manufacturer datash
 
 ## Schematic Design
 
-The schematic was developed in KiCad around the standalone RP2040 rather than a Raspberry Pi Pico module. This required implementing the power, clocking, external flash, USB, decoupling, programming, and peripheral circuitry needed to support the microcontroller directly.
+Designing around the bare RP2040 meant implementing circuitry that would normally already exist on a development board.
 
-![KiCad schematic for the custom bare-RP2040 embedded controller](Images/RP2040_Schematic.jpeg)
+That included providing the RP2040 with its external flash, clock source, regulated power, decoupling, USB connection, and the circuitry needed to program and boot the device. I also added the I2C and load-driver interfaces needed for the rest of the system.
 
-*KiCad schematic showing the RP2040 support circuitry and external interfaces.*
+![RP2040 controller schematic in KiCad](Images/RP2040_Schematic.jpeg)
+
+*KiCad schematic for the custom RP2040 controller.*
+
+Working through the schematic gave me much more experience reading datasheets and reference designs than I would have gotten from simply connecting peripherals to a development board. It also forced me to think about how each part of the circuit supported the microcontroller as a complete system.
 
 ---
 
-## PCB Layout
+## PCB Design
 
-The design was implemented as a two-layer PCB. I began by placing the major components and supporting circuitry, then routed and reviewed the complete board before fabrication.
+Once the schematic was complete, I moved into component placement and routing for the two-layer PCB.
 
-![Initial PCB component placement before trace routing](Images/Trace_Firstrun.jpeg)
+![Initial RP2040 PCB component placement](Images/Trace_Firstrun.jpeg)
 
-*Initial component-placement state before any traces were routed.*
+*Initial component placement before any traces were routed.*
 
-Placement required balancing the physical relationships between the RP2040, external flash, clock circuitry, power components, USB-C interface, peripheral connections, and load-driver circuitry within a two-layer design.
+This image shows the board at the beginning of the layout process. The components had been brought into the PCB editor, but the actual placement and routing work had not yet been completed.
+
+From there, I organized the components around their electrical relationships and worked through the routing of the complete board. This was one of my first experiences seeing how decisions that look simple on a schematic become physical layout problems once board space, routing, connectors, and component access all have to be considered together.
 
 ---
 
 ## Fabrication and Assembly
 
-After completing the schematic and PCB layout, I had the board fabricated and hand-assembled the components.
+After completing the layout, I had the PCB fabricated and assembled the board by hand.
 
-![Hand-assembled custom RP2040 embedded controller PCB](Images/Board_Assembled.jpeg)
+![Assembled custom RP2040 controller PCB](Images/Board_Assembled.jpeg)
 
-*Fabricated and hand-assembled controller board used for hardware bring-up and interface validation.*
+*Fabricated and hand-assembled RP2040 controller.*
 
-The assembled board was brought up incrementally rather than testing every function at once. This made it easier to isolate faults and verify each stage before moving deeper into firmware and peripheral testing.
-
----
-
-## Board Bring-Up and Validation
-
-My bring-up process followed a staged approach:
-
-1. Visually inspect the assembled PCB for placement, orientation, and soldering issues.
-2. Check power and ground connections before applying power.
-3. Verify the regulated 3.3 V supply rail.
-4. Confirm RP2040 programming and boot behavior.
-5. Load firmware to validate basic processor operation.
-6. Test the external interfaces and peripheral circuitry.
-7. Troubleshoot and retest the board as a complete system.
-
-Bring-up successfully verified:
-
-- RP2040 programming and boot
-- Firmware execution
-- I2C interface functionality
-- External load-driver functionality
-
-This process reinforced the value of validating hardware from the power system outward instead of immediately treating a failure as a firmware problem.
+Getting the physical board back was where the project became much more interesting. At that point, the question was no longer whether the schematic looked correct — I had to determine whether the actual hardware behaved the way I expected.
 
 ---
 
-## Engineering Takeaways
+## Board Bring-Up
 
-This project gave me practical experience with:
+I approached bring-up incrementally rather than immediately trying to run the entire system.
 
-- Designing around a bare microcontroller
-- Reading manufacturer datasheets and reference designs
-- External QSPI flash integration
-- Microcontroller clock circuitry
-- Power regulation and decoupling
-- USB-C implementation
-- I2C hardware interfaces
-- External load-driver circuitry
-- Two-layer PCB placement and routing
-- Hand assembly and soldering
-- Firmware programming
-- Hardware bring-up and fault isolation
+I started with visual inspection and basic power checks, then verified the regulated supply before moving on to the RP2040 itself. Once I confirmed that the microcontroller could be programmed and boot successfully, I loaded firmware and began testing the external interfaces.
 
-More importantly, it taught me that completing a PCB layout is not the end of the design process. The board must also be manufacturable, understandable, testable, and practical to debug once physical hardware exists.
+The board successfully reached the point where I could:
+
+- Program and boot the RP2040
+- Run firmware on the assembled hardware
+- Communicate over the I2C interfaces
+- Control the external load-driver circuitry
+
+The biggest lesson from bring-up was the importance of **working outward from the fundamentals**. If something was not behaving correctly, I learned to verify power, ground, connections, and the physical interface before assuming the problem was in firmware.
+
+That debugging process has carried into the hardware projects I've worked on since.
 
 ---
 
-## Design-for-Test Improvements for Rev B
+## What I Would Change in Rev B
 
-A second revision would preserve the working architecture while improving reviewability, test access, and maintainability:
+The board worked, but building and bringing it up showed me several things I would approach differently on a second revision.
 
-- Organize the schematic into clearer functional or hierarchical blocks
-- Improve schematic readability and design documentation
-- Add dedicated test points for important power rails and interfaces
-- Provide more intentional programming and debug access
-- Improve silkscreen labeling and component identification
-- Review power and thermal margins more formally
-- Define a functional test procedure before fabrication
-- Document bring-up results and validation steps more consistently
+The biggest improvement would be **designing for test and debug from the beginning**. I would add dedicated test points for important power rails and interfaces, make programming and debug access more intentional, and improve the silkscreen so components and connectors are easier to identify while working on the assembled board.
 
-These improvements reflect one of the main lessons from the project: a successful PCB should not only function electrically—it should also be easy for another engineer to review, assemble, test, debug, and maintain.
+I would also reorganize the schematic into clearer functional blocks. On this revision, my main focus was getting the electrical design working. With more PCB experience now, I place much more value on making a schematic easy for another engineer to understand and review.
+
+Finally, I would define the bring-up and functional test procedure before sending the board out for fabrication rather than developing that process while testing the finished hardware.
+
+One of the biggest things this project taught me is that a good PCB is not just electrically correct. It should also be **understandable, testable, debuggable, and maintainable**.
 
 ---
 
-## Why This Project Is in My Portfolio
+## Why This Project Matters to Me
 
-This project demonstrates my ability to move beyond development boards and take ownership of a custom embedded-hardware design from the microcontroller level through physical validation.
+This was one of my first complete custom microcontroller PCB designs, and it changed how I thought about embedded hardware.
 
-It combines **schematic design, PCB layout, component selection, assembly, firmware programming, hardware bring-up, interface testing, and engineering reflection** in one complete project. That schematic-to-hardware workflow—and the debugging required to make the assembled system work—is the experience I want to continue building on professionally.
+Using development boards makes it easy to treat the microcontroller as a black box. Designing around the bare RP2040 forced me to understand what actually has to exist around the processor for it to power up, boot, store firmware, communicate, and interact with external hardware.
+
+More importantly, I got to follow the design all the way from a schematic on my computer to a physical board that I could program, measure, debug, and improve.
+
+That **schematic → PCB → assembly → bring-up → debugging** process is the part of hardware engineering I enjoy most.
